@@ -12,6 +12,16 @@ public class BaseAttrValue implements Serializable {
     private String valueName;
     @Column
     private String attrId;
+    @Column
+    private String isEnabled;
+
+    public String getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(String isEnabled) {
+        this.isEnabled = isEnabled;
+    }
 
     public String getId() {
         return id;

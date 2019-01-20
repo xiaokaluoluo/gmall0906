@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div>
+    <table id="dg" class="easyui-datagrid" title="属性列表" data-options="singleSelect:true ,method:'get',toolbar:'#tb'">
+        <thead>
+        <tr>
+            <th data-options="field:'id'" width="20%">属性id</th>
+            <th data-options="field:'attrName'" width="80%">属性名</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="tb" style="padding:5px;height:auto">
+        <div style="margin-bottom:5px">
+            <a href="javascript:addAttrInfo()" class="easyui-linkbutton" iconCls="icon-add" plain="true">
+                添加
+            </a>
+            <a href="javascript:editAttrInfo()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">
+                编辑
+            </a>
+            <a href="javascript:deleteInfo()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">
+                删除
+            </a>
+        </div>
+        <div>
+            一级分类：
+            <select id="ctg1ForAttrList" class="easyui-combobox" style="width:100px"
+                    data-options="valueField:'id',textField:'name',url:'/getCatalog1',
+                   onSelect:function(rec){
+                      var url = 'getCatalog2?catalog1Id='+rec.id;
+                     $('#ctg2ForAttrList').combobox('clear');
+                     $('#ctg2ForAttrList').combobox('reload',url);
+                    }">
+
+            </select>
+            二级分类：
+            <select name="ctg2ForAttrList" id="ctg2ForAttrList" class="easyui-combobox" style="width:100px"
+                    data-options="valueField:'id',textField:'name',
+                    onSelect:function(rec){
+                        var url = 'getCatalog3?catalog2Id='+rec.id;
+                        $('#ctg3ForAttrList').combobox('clear');
+                        $('#ctg3ForAttrList').combobox('reload',url);
+                    }">
+
+            </select>
+            三级分类：
+            <select name="ctg3ForAttrList" id="ctg3ForAttrList" class="easyui-combobox" style="width:100px"
+                    data-options="valueField:'id',textField:'name'">
+            </select>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="javascript:reloadAttrList()">刷新</a>
+        </div>
+
+        <div id="dlg" class="easyui-dialog" title="编辑属性" style="width:600px;height:500px;"
+             closed="true" data-options="iconCls:'icon-save',resizable:true,modal:true" buttons="#bb">
+            <form id="attrForm">
+                <br/>
+                <label>属性名称:</label>
+                <input id="attrName" name="attrName" class="easyui-textbox" data-options="" style="width:100px"/>
+                <input id="attrId" name="attrId" type="hidden"/>
+                <br/><br/>
+                <table id="dg_av" class="easyui-datagrid" title="属性值列表"></table>
+            </form>
+        </div>
+
+        <div id="bb">
+            <a href="#" class="easyui-linkbutton" onclick="saveAttr()">保存</a>
+            <a href="#" class="easyui-linkbutton" onclick="guan()">关闭</a>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    // 获得当前三级分类属性--------------------------------------------------------------------
+    function reloadAttrList(){
+        var ctg3value = $("#ctg3ForAttrList").combobox('getValue');
+
+        $("#dg").datagrid({url: 'getAttrList?catalog3Id=' + ctg3value});
+    }
+
+
+    // 初始化平台属性  因为datagrid 没有初始化按钮和列头，所以首先要编写初始化方法。------------------
+    function initAttrValueDatagrid() {
+        // loadData 加载本地数据，旧的行将被移除。 返回0行数据
+        $("#dg_av").datagrid('loadData', {total: 0, rows: []});
+        // 增加列属性
+        datagrid = $("#dg_av").datagrid({
+            columns: [[
+                {field: 'id', title: '编号', width: '20%'},
+                {
+                    field: 'valueName', title: '属性值名称', width: '80%',
+                    // 指明编辑类型 validatebox 验证框
+                    editor: {
+                        type: 'validatebox', options: {required: true}
+                    }
+                }
+            ]],
+            // 通过数组定义工具栏,datagrid数据表格api下可查询到
+            toolbar: [{
+                // 文本及按钮
+                text: '添加', iconCls: 'icon-add',
+                handler: function () {
+                    // 添加一行表格数据
+                    datagrid.datagrid('appendRow', {id: '', valueName: '请添加属性值'});
+                }
+            }, '-',
+                {
+                    text: '删除', iconCls: 'icon-remove',
+                    handler: function () {
+                        //  getselected 返回第一个被选中的行或如果没有选中的行则返回null。 删除一行
+                        var row = datagrid.datagrid('getSelected');
+                        if (row) {
+                            var rowIndex = datagrid.datagrid('getRowIndex', row);
+                            datagrid.datagrid('deleteRow', rowIndex);
+                        }
+                    }
+                }],
+            onDblClickRow: function (rowIndex, rowData) {
+                //双击开启编辑行
+                datagrid.datagrid("beginEdit", rowIndex);
+                //设定当失去焦点时,退出编辑状态
+                var valueName = rowData.valueName;
+                $("input.datagrid-editable-input").val(valueName).bind("blur", function (evt) {
+                    datagrid.datagrid('endEdit', rowIndex);
+                });
+            }
+        });
+    }
+
+    // 添加一件商品----------------------------------------------------------------------------------
+    function addAttrInfo() {
+        if (!checkBeforeDialog()) {
+            return;
+        }
+        //弹出框
+        $("#dlg").dialog("open");
+        // 进系统前先清空
+        $("#attrId").val("");
+        $("#attrName").textbox('clear');
+        $('#dg_av').datagrid({url: ''});
+        // 初始化datagrid
+        initAttrValueDatagrid();
+
+    }
+
+    // 修改商品------------------------------------------------------------------------------
+    function editAttrInfo() {
+        if (!checkBeforeDialog()) {
+            return;
+        }
+        $("#dlg").dialog("open");
+
+        // 初始化datagrid
+        initAttrValueDatagrid();
+
+        // 加载数据
+        var attrInfoRow = $("#dg").datagrid('getSelected');
+        $('#dg_av').datagrid({url: 'getAttrValueList?attrId=' + attrInfoRow.id});
+        $("#attrId").val(attrInfoRow.id);
+        $("#attrName").textbox('setValue', attrInfoRow.attrName);
+    }
+
+    // 删除 ---------------------------------------------------------------------------------
+    function deleteInfo() {
+        if (!checkBeforeDialog()) {
+            return;
+        }
+        var attrJson = {};
+        var rows = $("#dg").datagrid('getSelected');
+        attrJson["id"] = rows.id;
+
+        $.messager.confirm('确认', '您确认想要删除记录吗？', function (data) {
+            if (data) {
+                $.post("deleteAttrInfoId",attrJson,function (data) {
+                })
+                reloadAttrList();
+            }
+        });
+
+    }
+
+    // 加载按钮前先判断三级分类是否选择---------------------------------------------------------
+    function checkBeforeDialog() {
+        var ctg3value = $("#ctg3ForAttrList").combobox('getValue');
+        if (ctg3value == '') {
+            $.messager.alert('警告', '请先选择三级分类');
+            return false;
+        }
+        return true;
+    }
+
+    // 保存操作------------------------------------------------------------------------------------
+    function saveAttr(){
+        var attrJson ={} ;
+        //把表格中的数据循环组合成json
+        var attrValueRows= $("#dg_av").datagrid('getRows') ;
+        for (var i = 0; i < attrValueRows.length; i++) {
+            attrJson["attrValues["+i+"].id"]=attrValueRows[i].id;
+            attrJson["attrValues["+i+"].valueName"]=attrValueRows[i].valueName;
+        }
+
+        attrJson["attrName"]=$("#attrName").val();
+        attrJson["id"]=$("#attrId").val();
+        attrJson["catalog3Id"]=$("#ctg3ForAttrList").combobox('getValue');
+
+        //ajax 保存到后台
+        $.post("saveAttrInfo",attrJson,function(data){
+            $("#dlg").dialog("close");
+            $("#dg").datagrid("reload");
+        })
+    }
+    function guan() {
+        $("#dlg").dialog("close");
+    }
+</script>
+</body>
+</html>

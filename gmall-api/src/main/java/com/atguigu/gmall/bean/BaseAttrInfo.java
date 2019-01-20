@@ -1,13 +1,14 @@
 package com.atguigu.gmall.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 public class BaseAttrInfo implements Serializable {
 
     @Column
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column
     private String attrName;
@@ -15,6 +16,16 @@ public class BaseAttrInfo implements Serializable {
     private String catalog3Id;
     @Column
     private String isEnabled;
+    @Transient
+    private List<BaseAttrValue> attrValues;
+
+    public List<BaseAttrValue> getAttrValues() {
+        return attrValues;
+    }
+
+    public void setAttrValues(List<BaseAttrValue> attrValues) {
+        this.attrValues = attrValues;
+    }
 
     public String getId() {
         return id;
