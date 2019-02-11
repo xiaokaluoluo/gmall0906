@@ -1,12 +1,13 @@
 package com.atguigu.gmall.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 public class SpuInfo implements Serializable {
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column
     private String spuName;
@@ -16,6 +17,26 @@ public class SpuInfo implements Serializable {
     private String catalog3Id;
     @Column
     private String tmId;
+    @Transient
+    private List<SpuSaleAttr> spuSaleAttrList;
+    @Transient
+    private List<SpuImage> spuImageList;
+
+    public List<SpuSaleAttr> getSpuSaleAttrList() {
+        return spuSaleAttrList;
+    }
+
+    public void setSpuSaleAttrList(List<SpuSaleAttr> spuSaleAttrList) {
+        this.spuSaleAttrList = spuSaleAttrList;
+    }
+
+    public List<SpuImage> getSpuImageList() {
+        return spuImageList;
+    }
+
+    public void setSpuImageList(List<SpuImage> spuImageList) {
+        this.spuImageList = spuImageList;
+    }
 
     public String getId() {
         return id;

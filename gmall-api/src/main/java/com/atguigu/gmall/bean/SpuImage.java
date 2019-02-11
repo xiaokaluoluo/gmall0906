@@ -15,6 +15,8 @@ public class SpuImage implements Serializable {
     @Column
     private String imgUrl;
 
+    public static final String IMGURLIP = "http://192.168.234.188";
+
     public String getId() {
         return id;
     }

@@ -10,4 +10,10 @@ public class ManageController {
     public String index(){
         return "index";
     }
+
+
+    @RequestMapping("spuListPage")
+    public String spuList(){
+        return "spuListPage";
+    }
 }

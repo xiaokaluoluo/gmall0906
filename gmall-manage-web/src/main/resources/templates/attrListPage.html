@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title></title>
@@ -90,10 +90,9 @@
         datagrid = $("#dg_av").datagrid({
             columns: [[
                 {field: 'id', title: '编号', width: '20%'},
-                {
-                    field: 'valueName', title: '属性值名称', width: '80%',
+                {field: 'valueName', title: '属性值名称', width: '80%',
                     // 指明编辑类型 validatebox 验证框
-                    editor: {
+                 editor: {
                         type: 'validatebox', options: {required: true}
                     }
                 }
@@ -172,7 +171,7 @@
         var rows = $("#dg").datagrid('getSelected');
         attrJson["id"] = rows.id;
 
-        $.messager.confirm('确认', '您确认想要删除记录吗？', function (data) {
+        $.messager.confirm('确认', '您确认想要删除[ '+rows.attrName +' ]吗？', function (data) {
             if (data) {
                 $.post("deleteAttrInfoId",attrJson,function (data) {
                 })

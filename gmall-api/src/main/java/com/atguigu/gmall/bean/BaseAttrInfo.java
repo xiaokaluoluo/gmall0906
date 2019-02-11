@@ -17,7 +17,7 @@ public class BaseAttrInfo implements Serializable {
     @Column
     private String isEnabled;
     @Transient
-    private List<BaseAttrValue> attrValues;
+    List<BaseAttrValue> attrValues;
 
     public List<BaseAttrValue> getAttrValues() {
         return attrValues;

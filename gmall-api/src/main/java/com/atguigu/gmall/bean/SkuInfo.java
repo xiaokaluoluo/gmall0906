@@ -2,7 +2,9 @@ package com.atguigu.gmall.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.List;
 
 public class SkuInfo implements Serializable {
     @Id
@@ -24,6 +26,36 @@ public class SkuInfo implements Serializable {
     private String catalog3Id;
     @Column
     private String sku_defaultImg;
+    @Transient
+    private List<SkuImage> skuImageList;
+    @Transient
+    private List<SkuAttrValue> skuAttrValueList;
+    @Transient
+    private List<SkuSaleAttrValue> skuSaleAttrValueList;
+
+    public List<SkuImage> getSkuImageList() {
+        return skuImageList;
+    }
+
+    public void setSkuImageList(List<SkuImage> skuImageList) {
+        this.skuImageList = skuImageList;
+    }
+
+    public List<SkuAttrValue> getSkuAttrValueList() {
+        return skuAttrValueList;
+    }
+
+    public void setSkuAttrValueList(List<SkuAttrValue> skuAttrValueList) {
+        this.skuAttrValueList = skuAttrValueList;
+    }
+
+    public List<SkuSaleAttrValue> getSkuSaleAttrValueList() {
+        return skuSaleAttrValueList;
+    }
+
+    public void setSkuSaleAttrValueList(List<SkuSaleAttrValue> skuSaleAttrValueList) {
+        this.skuSaleAttrValueList = skuSaleAttrValueList;
+    }
 
     public String getId() {
         return id;

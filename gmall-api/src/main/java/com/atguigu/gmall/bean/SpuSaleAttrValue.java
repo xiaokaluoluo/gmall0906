@@ -9,11 +9,11 @@ public class SpuSaleAttrValue implements Serializable {
     @Column
     private String id;
     @Column
-    private String spu_id;
+    private String spuId;
     @Column
-    private String sale_attr_id;
+    private String saleAttrId;
     @Column
-    private String sale_attr_value_name;
+    private String saleAttrValueName;
 
     public String getId() {
         return id;
@@ -23,27 +23,27 @@ public class SpuSaleAttrValue implements Serializable {
         this.id = id;
     }
 
-    public String getSpu_id() {
-        return spu_id;
+    public String getspuId() {
+        return spuId;
     }
 
-    public void setSpu_id(String spu_id) {
-        this.spu_id = spu_id;
+    public void setspuId(String spuId) {
+        this.spuId = spuId;
     }
 
-    public String getSale_attr_id() {
-        return sale_attr_id;
+    public String getsaleAttrId() {
+        return saleAttrId;
     }
 
-    public void setSale_attr_id(String sale_attr_id) {
-        this.sale_attr_id = sale_attr_id;
+    public void setsaleAttrId(String saleAttrId) {
+        this.saleAttrId = saleAttrId;
     }
 
-    public String getSale_attr_value_name() {
-        return sale_attr_value_name;
+    public String getsaleAttrValueName() {
+        return saleAttrValueName;
     }
 
-    public void setSale_attr_value_name(String sale_attr_value_name) {
-        this.sale_attr_value_name = sale_attr_value_name;
+    public void setsaleAttrValueName(String saleAttrValueName) {
+        this.saleAttrValueName = saleAttrValueName;
     }
 }
